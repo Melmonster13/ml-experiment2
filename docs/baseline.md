@@ -1,6 +1,6 @@
 # Baseline (extracted from `ml-experiment`)
 
-Source repo: `/Users/melcadd/Developer/ml-experiment` (HEAD `30dae09`).
+Source repo: [ml-experiment](https://github.com/Melmonster13/ml-experiment) (HEAD `30dae09`).
 Every original config snapshot lives in `experiments/<timestamp>/adapter_config.json`.
 
 ## Environment

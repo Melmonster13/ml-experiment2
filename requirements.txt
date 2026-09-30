@@ -1,4 +1,4 @@
 mlx==0.31.2
 mlx-lm==0.31.3
-matplotlib
-pyyaml
+matplotlib==3.10.9
+pyyaml==6.0.3
