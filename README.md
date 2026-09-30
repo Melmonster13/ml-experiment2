@@ -84,6 +84,34 @@ The fp32 baseline peaks at 12.64 GB, over Metal's default 11.84 GB cap on a 16 G
 
 [`scripts/eval_samples.py`](scripts/eval_samples.py) generates greedy completions (temperature 0, 256 max tokens, seed 0) for 10 fixed Python prompts ([`prompts/eval_prompts.txt`](prompts/eval_prompts.txt)) with each run's unfused adapter. Outputs are in [`results/samples/`](results/samples/).
 
+I graded each answer by reading the code, not by executing it:
+- **✓** works. An answer still counts if it only lacks an `import re` or `import csv`, which the model often leaves out.
+- **~** runs but is partly wrong.
+- **✗** wrong.
+- **stub** placeholder code such as `# Your code here`.
+
+| # | Task | R1 fp32 | R3 q8 | R2 q4g64 | R4 q4g32 | R5 q4g128 | R6 no-ckpt | R7 seq1024 | R8a | R8b |
+|---|---|---|---|---|---|---|---|---|---|---|
+| 1 | palindrome | stub | stub | stub | ✓ | stub | stub | stub | ✓ | stub |
+| 2 | fibonacci | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
+| 3 | merge sorted | stub | stub | ✗ | stub | stub | stub | stub | ✓ | ✓ |
+| 4 | word count | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
+| 5 | stack class | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ | ✓ |
+| 6 | dedupe | ✓ | ✓ | ✓ | ✓ | stub | ✓ | ✓ | ✓ | ✓ |
+| 7 | CSV average | ~ | ~ | stub | stub | stub | ~ | ✓ | ~ | ✓ |
+| 8 | is prime | ✓ | ✓ | ✓ | ✓ | ✓ | ~ | ✓ | ✓ | ✓ |
+| 9 | flatten | ✓ | ✓ | ✓ | ✓ | stub | ✓ | ✓ | ✓ | ✓ |
+| 10 | email regex | ✓ | stub | stub | ✓ | stub | ✓ | ✓ | ✓ | ✓ |
+| | **Working** | **7** | **6** | **6** | **8** | **4** | **6** | **8** | **9** | **9** |
+| | Test loss | 0.595 | 0.595 | 0.614 | 0.609 | 0.616 | 0.595 | 0.593 | 0.561 | 0.579 |
+
+- **Most failures are stubs, and the model learned them from the data.** Some training examples in the Python-instructions dataset have a stub as the "response", such as `# Write code here` / `return True`. The fine-tuned models learned to produce them.
+- **R8a and R8b are the clear winners,** with 9 working answers each. R8a produced no stubs, and they're the only runs that wrote a real two-pointer merge. The extra layers and context that quantization made room for showed up in the code, not just in the loss.
+- **R5 (4-bit, g128) is the weakest,** with 6 stubs and 4 working answers. It also has the worst test loss. This is the one place where the coarsest quantization visibly hurts.
+- **8-bit and fp32 answer almost identically.** R1 and R3 give near-identical code on 8 of 10 prompts, consistent with their identical loss.
+
+This is 10 prompts with one greedy sample each. It's good evidence for the stub pattern and the R8 result, but too thin to rank runs that are within one or two answers of each other.
+
 ## Reproduce
 
 ```bash
