@@ -1,0 +1,23 @@
+Loading configuration file configs/r1_lora_fp.yaml
+Loading pretrained model
+
+Fetching 7 files:   0%|          | 0/7 [00:00<?, ?it/s]
+Fetching 7 files: 100%|██████████| 7/7 [00:00<00:00, 224123.11it/s]
+Loading datasets
+Training
+Trainable parameters: 0.014% (0.410M/3030.371M)
+Starting training..., iters: 200
+
+Calculating loss...:   0%|          | 0/5 [00:00<?, ?it/s]
+Calculating loss...:  20%|██        | 1/5 [00:13<00:53, 13.40s/it]
+Calculating loss...:  40%|████      | 2/5 [00:13<00:17,  5.69s/it]
+Calculating loss...:  60%|██████    | 3/5 [00:14<00:06,  3.40s/it]
+Calculating loss...:  80%|████████  | 4/5 [00:14<00:02,  2.25s/it]
+Calculating loss...: 100%|██████████| 5/5 [00:15<00:00,  1.60s/it]
+Calculating loss...: 100%|██████████| 5/5 [00:15<00:00,  3.06s/it]
+[WARNING] Some sequences are longer than 256 tokens. The longest sentence 1499 will be truncated to 256. Consider pre-splitting your data to save memory.
+[WARNING] Some sequences are longer than 256 tokens. The longest sentence 304 will be truncated to 256. Consider pre-splitting your data to save memory.
+Iter 1: Val loss 1.407, Val took 15.341s
+libc++abi: terminating due to uncaught exception of type std::runtime_error: [METAL] Command buffer execution failed: Insufficient Memory (00000008:kIOGPUCommandBufferCallbackErrorOutOfMemory)
+/opt/homebrew/Cellar/python@3.11/3.11.15_1/Frameworks/Python.framework/Versions/3.11/lib/python3.11/multiprocessing/resource_tracker.py:254: UserWarning: resource_tracker: There appear to be 1 leaked semaphore objects to clean up at shutdown
+  warnings.warn('resource_tracker: There appear to be %d '

@@ -1,0 +1,38 @@
+Loading configuration file configs/r1_lora_fp.yaml
+Loading pretrained model
+
+Fetching 7 files:   0%|          | 0/7 [00:00<?, ?it/s]
+Fetching 7 files: 100%|██████████| 7/7 [00:00<00:00, 82472.27it/s]
+Loading datasets
+Training
+Trainable parameters: 0.014% (0.410M/3030.371M)
+Starting training..., iters: 200
+
+Calculating loss...:   0%|          | 0/5 [00:00<?, ?it/s]
+Calculating loss...:  20%|██        | 1/5 [00:48<03:13, 48.43s/it]
+Calculating loss...:  40%|████      | 2/5 [00:48<01:00, 20.16s/it]
+Calculating loss...:  60%|██████    | 3/5 [00:49<00:22, 11.26s/it]
+Calculating loss...:  80%|████████  | 4/5 [00:49<00:07,  7.01s/it]
+Calculating loss...: 100%|██████████| 5/5 [00:50<00:00,  4.65s/it]
+Calculating loss...: 100%|██████████| 5/5 [00:50<00:00, 10.08s/it]
+[WARNING] Some sequences are longer than 256 tokens. The longest sentence 1499 will be truncated to 256. Consider pre-splitting your data to save memory.
+[WARNING] Some sequences are longer than 256 tokens. The longest sentence 304 will be truncated to 256. Consider pre-splitting your data to save memory.
+Iter 1: Val loss 1.407, Val took 50.564s
+[WARNING] Some sequences are longer than 256 tokens. The longest sentence 605 will be truncated to 256. Consider pre-splitting your data to save memory.
+Iter 10: Train loss 1.218, Learning Rate 1.000e-04, It/sec 1.296, Tokens/sec 210.838, Trained Tokens 1627, Peak mem 12.638 GB
+[WARNING] Some sequences are longer than 256 tokens. The longest sentence 371 will be truncated to 256. Consider pre-splitting your data to save memory.
+Iter 20: Train loss 0.748, Learning Rate 1.000e-04, It/sec 1.738, Tokens/sec 270.475, Trained Tokens 3183, Peak mem 12.638 GB
+[WARNING] Some sequences are longer than 256 tokens. The longest sentence 473 will be truncated to 256. Consider pre-splitting your data to save memory.
+[WARNING] Some sequences are longer than 256 tokens. The longest sentence 264 will be truncated to 256. Consider pre-splitting your data to save memory.
+Iter 30: Train loss 0.779, Learning Rate 1.000e-04, It/sec 1.712, Tokens/sec 275.388, Trained Tokens 4792, Peak mem 12.638 GB
+[WARNING] Some sequences are longer than 256 tokens. The longest sentence 290 will be truncated to 256. Consider pre-splitting your data to save memory.
+[WARNING] Some sequences are longer than 256 tokens. The longest sentence 286 will be truncated to 256. Consider pre-splitting your data to save memory.
+[WARNING] Some sequences are longer than 256 tokens. The longest sentence 370 will be truncated to 256. Consider pre-splitting your data to save memory.
+Iter 40: Train loss 0.663, Learning Rate 1.000e-04, It/sec 1.615, Tokens/sec 282.636, Trained Tokens 6542, Peak mem 12.638 GB
+[WARNING] Some sequences are longer than 256 tokens. The longest sentence 346 will be truncated to 256. Consider pre-splitting your data to save memory.
+[WARNING] Some sequences are longer than 256 tokens. The longest sentence 474 will be truncated to 256. Consider pre-splitting your data to save memory.
+[WARNING] Some sequences are longer than 256 tokens. The longest sentence 805 will be truncated to 256. Consider pre-splitting your data to save memory.
+Iter 50: Train loss 0.719, Learning Rate 1.000e-04, It/sec 1.455, Tokens/sec 275.194, Trained Tokens 8434, Peak mem 12.638 GB
+libc++abi: terminating due to uncaught exception of type std::runtime_error: [METAL] Command buffer execution failed: Insufficient Memory (00000008:kIOGPUCommandBufferCallbackErrorOutOfMemory)
+/opt/homebrew/Cellar/python@3.11/3.11.15_1/Frameworks/Python.framework/Versions/3.11/lib/python3.11/multiprocessing/resource_tracker.py:254: UserWarning: resource_tracker: There appear to be 1 leaked semaphore objects to clean up at shutdown
+  warnings.warn('resource_tracker: There appear to be %d '

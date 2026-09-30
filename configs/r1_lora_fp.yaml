@@ -1,0 +1,25 @@
+model: bigcode/starcoder2-3b
+train: true
+test: true
+data: data
+seed: 0
+fine_tune_type: lora
+optimizer: adam
+num_layers: 4
+batch_size: 1
+iters: 200
+val_batches: 5
+test_batches: -1
+learning_rate: 1.0e-4
+steps_per_report: 10
+steps_per_eval: 100
+save_every: 100
+adapter_path: adapters/r1_lora_fp
+max_seq_length: 256
+grad_checkpoint: true
+lora_parameters:
+  rank: 8
+  alpha: 16
+  dropout: 0.05
+  scale: 10.0
+  keys: [self_attn.q_proj, self_attn.k_proj, self_attn.v_proj, self_attn.dense]

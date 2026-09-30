@@ -1,0 +1,9 @@
+models/
+adapters/
+data/
+*.safetensors
+*.npz
+.venv/
+.idea/
+.DS_Store
+__pycache__/

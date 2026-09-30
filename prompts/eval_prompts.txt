@@ -1,0 +1,10 @@
+Write a Python function that checks whether a string is a palindrome, ignoring case and spaces.
+Write a Python function that returns the n-th Fibonacci number using iteration.
+Write a Python function that merges two sorted lists into one sorted list.
+Write a Python function that counts the frequency of each word in a sentence and returns a dictionary.
+Write a Python class for a stack with push, pop, peek, and is_empty methods.
+Write a Python function that removes duplicates from a list while preserving order.
+Write a Python function that reads a CSV file and returns the average of a given numeric column.
+Write a Python function that checks whether a number is prime.
+Write a Python function that flattens a nested list of arbitrary depth.
+Write a Python function that validates an email address using a regular expression.
