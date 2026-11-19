@@ -10,18 +10,20 @@ ROOT = Path(__file__).resolve().parent.parent
 RESULTS = ROOT / "results"
 PLOTS = RESULTS / "plots"
 
-# Categorical slots in fixed order: fp32, 4-bit, 8-bit.
-PRECISION_COLORS = {"32": "#2a78d6", "4": "#eb6834", "8": "#1baf7a"}
+# Colors from Melmonster13/synthwave-theme (the Pages site theme). Cyan is deepened
+# from the theme's #00e5ff to sit in the readable lightness band on the dark panel.
+SURFACE = "#1c1140"
+PRECISION_COLORS = {"32": "#00a5c4", "4": "#9b5cff", "8": "#ff2e88"}
 PRECISION_LABELS = {"32": "fp32 (LoRA)", "4": "4-bit (QLoRA)", "8": "8-bit (QLoRA)"}
-BAR_COLOR = "#2a78d6"
-INK, MUTED, GRID = "#0b0b0b", "#52514e", "#e4e3df"
+INK, MUTED, GRID = "#ece6ff", "#b9acdf", "#2e2160"
 DEFAULT_METAL_CAP_GB = 11.84  # max_recommended_working_set_size before raising iogpu.wired_limit_mb
 
 plt.rcParams.update({
-    "figure.dpi": 150, "font.size": 10, "axes.edgecolor": MUTED, "axes.labelcolor": INK,
+    "figure.dpi": 150, "font.size": 10, "figure.facecolor": SURFACE, "axes.facecolor": SURFACE,
+    "savefig.facecolor": SURFACE, "text.color": INK, "axes.edgecolor": MUTED, "axes.labelcolor": INK,
     "xtick.color": MUTED, "ytick.color": MUTED, "axes.spines.top": False,
     "axes.spines.right": False, "axes.grid": True, "grid.color": GRID, "grid.linewidth": 0.8,
-    "axes.axisbelow": True, "legend.frameon": False,
+    "axes.axisbelow": True, "legend.frameon": False, "legend.labelcolor": INK,
 })
 
 
@@ -41,7 +43,7 @@ def memory_vs_loss(runs: list[dict]) -> None:
         pts = [r for r in ok if r["bits"] == bits]
         if pts:
             ax.scatter([float(r["peak_mem_gb"]) for r in pts], [float(r["final_val_loss"]) for r in pts],
-                       s=64, color=color, edgecolor="white", linewidth=2, label=PRECISION_LABELS[bits], zorder=3)
+                       s=64, color=color, edgecolor=SURFACE, linewidth=2, label=PRECISION_LABELS[bits], zorder=3)
     for r in ok:
         ax.annotate(label(r), (float(r["peak_mem_gb"]), float(r["final_val_loss"])),
                     xytext=(7, 4), textcoords="offset points", color=INK, fontsize=9)
@@ -80,9 +82,9 @@ def loss_curves(runs: list[dict]) -> None:
         color = PRECISION_COLORS[by_id[run_id]["bits"]]
         train, val = read_metrics(run_id)
         name = f"{run_id.upper()} {PRECISION_LABELS[by_id[run_id]['bits']]}"
-        ax.plot(*zip(*train), color=color, linewidth=1, alpha=0.45, label=f"{name}: train")
+        ax.plot(*zip(*train), color=color, linewidth=1, alpha=0.7, label=f"{name}: train")
         ax.plot(*zip(*val), color=color, linewidth=2, marker="o", markersize=6,
-                markeredgecolor="white", markeredgewidth=2, label=f"{name}: val")
+                markeredgecolor=SURFACE, markeredgewidth=2, label=f"{name}: val")
     ax.set_xlabel("Iteration")
     ax.set_ylabel("Loss")
     ax.set_title("Loss over training: LoRA (R1) vs QLoRA 4-bit (R2)", loc="left", color=INK)
@@ -91,8 +93,9 @@ def loss_curves(runs: list[dict]) -> None:
     fig.savefig(PLOTS / "loss_curves_r1_r2.png")
 
 
-def bars(ax, names: list[str], values: list[float], fmt: str) -> None:
-    rects = ax.bar(names, values, width=0.6, color=BAR_COLOR, edgecolor="white", linewidth=2)
+def bars(ax, runs: list[dict], names: list[str], values: list[float], fmt: str) -> None:
+    colors = [PRECISION_COLORS[r["bits"]] for r in runs]
+    rects = ax.bar(names, values, width=0.6, color=colors, edgecolor=SURFACE, linewidth=2)
     ax.bar_label(rects, labels=[fmt.format(v) for v in values], padding=3, color=INK, fontsize=9)
     ax.grid(axis="x", visible=False)
 
@@ -100,7 +103,11 @@ def bars(ax, names: list[str], values: list[float], fmt: str) -> None:
 def tokens_per_sec(runs: list[dict]) -> None:
     ok = [r for r in runs if r["status"] == "ok"]
     fig, ax = plt.subplots(figsize=(7, 4))
-    bars(ax, [label(r) for r in ok], [float(r["tokens_per_sec"]) for r in ok], "{:.0f}")
+    bars(ax, ok, [label(r) for r in ok], [float(r["tokens_per_sec"]) for r in ok], "{:.0f}")
+    bits_present = dict.fromkeys(r["bits"] for r in ok)
+    ax.legend(handles=[plt.Rectangle((0, 0), 1, 1, color=PRECISION_COLORS[b]) for b in bits_present],
+              labels=[PRECISION_LABELS[b] for b in bits_present], loc="upper left", ncol=3)
+    ax.set_ylim(top=max(float(r["tokens_per_sec"]) for r in ok) * 1.25)
     ax.set_ylabel("Tokens/sec (mean over reports)")
     ax.set_title("Training throughput per run", loc="left", color=INK)
     fig.tight_layout()
@@ -111,7 +118,7 @@ def group_size(runs: list[dict]) -> None:
     q4 = sorted((r for r in runs if r["bits"] == "4" and r["status"] == "ok" and r["run_id"] in {"r2", "r4", "r5"}),
                 key=lambda r: int(r["group_size"]))
     fig, ax = plt.subplots(figsize=(6, 4))
-    bars(ax, [f"g{r['group_size']} ({label(r)})" for r in q4], [float(r["final_val_loss"]) for r in q4], "{:.3f}")
+    bars(ax, q4, [f"g{r['group_size']} ({label(r)})" for r in q4], [float(r["final_val_loss"]) for r in q4], "{:.3f}")
     ax.set_ylabel("Final val loss")
     ax.set_title("4-bit val loss by quantization group size", loc="left", color=INK)
     fig.tight_layout()

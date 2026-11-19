@@ -24,8 +24,8 @@ The freed memory made room for configs that ran out of memory in the original pr
   - Adam, learning rate 1e-4 (constant), batch size 1
   - 200 iterations, sequence length 256, gradient checkpointing on, seed 0
 - **Quantized bases** were built once with `mlx_lm convert -q` (affine quantization, fp32 scales and biases) and reused across runs.
-- **One variable per run** relative to the baseline, or relative to R3 for R6–R8. Every config is in [`configs/`](configs/).
-- **Fresh process per run** ([`scripts/run.py`](scripts/run.py)), so peak memory never carries over between runs. The run script parses val loss, test loss, peak memory and tokens/sec from `mlx_lm lora` stdout and keeps the raw logs in [`results/logs/`](results/logs/).
+- **One variable per run** relative to the baseline, or relative to R3 for R6–R8. Every config is in [`configs/`](https://github.com/Melmonster13/ml-experiment2/tree/main/configs).
+- **Fresh process per run** ([`scripts/run.py`](scripts/run.py)), so peak memory never carries over between runs. The run script parses val loss, test loss, peak memory and tokens/sec from `mlx_lm lora` stdout and keeps the raw logs in [`results/logs/`](https://github.com/Melmonster13/ml-experiment2/tree/main/results/logs).
 - **Test loss** is computed on the full 930-example test set. Val loss uses `val_batches: 5` to match the original, so **test loss is the more reliable number.**
 
 ## Results
@@ -70,7 +70,7 @@ R1 reproduced the original run exactly: val loss 1.407 / 0.935 / 0.569 at iterat
 2. **Attempt 2:** ran out of memory before iteration 10, even with 30 GB of free disk.
 3. **Attempt 3:** completed after the GPU memory cap was raised to 14 GB.
 
-The fp32 baseline peaks at 12.64 GB, over Metal's default 11.84 GB cap on a 16 GB machine. Whether it completes depends on the state of memory at the time, so the original run completing was partly luck. The failed logs are kept in [`results/logs/`](results/logs/).
+The fp32 baseline peaks at 12.64 GB, over Metal's default 11.84 GB cap on a 16 GB machine. Whether it completes depends on the state of memory at the time, so the original run completing was partly luck. The failed logs are kept in [`results/logs/`](https://github.com/Melmonster13/ml-experiment2/tree/main/results/logs).
 
 ## Honest caveats
 
@@ -82,7 +82,7 @@ The fp32 baseline peaks at 12.64 GB, over Metal's default 11.84 GB cap on a 16 G
 
 ## Qualitative samples
 
-[`scripts/eval_samples.py`](scripts/eval_samples.py) generates greedy completions (temperature 0, 256 max tokens, seed 0) for 10 fixed Python prompts ([`prompts/eval_prompts.txt`](prompts/eval_prompts.txt)) with each run's unfused adapter. Outputs are in [`results/samples/`](results/samples/).
+[`scripts/eval_samples.py`](scripts/eval_samples.py) generates greedy completions (temperature 0, 256 max tokens, seed 0) for 10 fixed Python prompts ([`prompts/eval_prompts.txt`](prompts/eval_prompts.txt)) with each run's unfused adapter. Outputs are in [`results/samples/`](https://github.com/Melmonster13/ml-experiment2/tree/main/results/samples).
 
 I graded each answer by reading the code, not by executing it:
 - **✓** works. An answer still counts if it only lacks an `import re` or `import csv`, which the model often leaves out.
